@@ -1,0 +1,105 @@
+
+public class BeforeXoring {
+	public static void main(String[] args) {
+        Cryptograms cg = new Cryptograms();
+        Xoring xoring = new Xoring();
+
+        String CipherToDecrypt = "10011000 01110011 10111010 01101001 10100010 11010100 10001111 11101110 00110001 01100111 10010010 11010000 11001000 00100000 11111011 01011011 11100010 01001000 11111001 10001001 00100011 10101000 11001101 00110100 01111100 11110110 11100011 00110000 11100011 11011000 00111110 00011101 10110111 11100010 10010011 10100001 01010101 11100100 00101101 10101010 01111011 11011011 01100011 01111101 00001011 01100100 11101111 00010000 10001010 10111101 00000100 01000101 11010010 10111110 11010011 11010100 00001011 01110100 10001111 01100000 10110000 11101101";
+        CipherToDecrypt = CipherToDecrypt.replaceAll("\\s+", "");
+        //System.out.println(xoring.toAscii(CipherToDecrypt));
+        String[][] AfterXor = new String [20][20];
+        String[] Cryptogram = new String [20];
+
+        for(int q = 0; q < 20; q++) {
+            Cryptogram[q] = cg.Cryptograms(q);
+            Cryptogram[q] = Cryptogram[q].replaceAll("\\s+", "");
+        }
+
+        for(int j = 0; j < 20; j++) {
+            //Cryptogram[j] = cg.Cryptograms(j);
+            for (int i = j+1; i < 20; i++) {
+                //Cryptogram[i] = cg.Cryptograms(i);
+
+                if(Cryptogram[j].length() > Cryptogram[i].length())
+                    Cryptogram[j] = Cryptogram[j].substring(0, Cryptogram[i].length());
+                else
+                    Cryptogram[i] = Cryptogram[i].substring(0, Cryptogram[j].length());
+                System.out.print("Cryptogram[" + j + "] ^ Cryptogram[" + i + "]=");
+                AfterXor[j][i] = xoring.Xoring(Cryptogram[j], Cryptogram[i]);
+                System.out.println(AfterXor[j][i]);
+            }
+        }
+        String key;
+        String key2;
+        String space = "00100000";
+        key = BinaryXor(Cryptogram[10], space);
+        key2 = BinaryXor(Cryptogram[13], space);
+        System.out.println("Klucze =" + key + " " + key2 + " " + xoring.toAscii(space).charAt(0) + xoring.toAscii(Cryptogram[0]).charAt(14) );
+
+        String newkey, newkey2;
+        for(int k = 0; k < 20; k++) {
+        	newkey = BinaryXor(Cryptogram[k], key);
+        	newkey2 = BinaryXor(Cryptogram[k], key2);
+            System.out.println(k + " key1=" +xoring.toAscii(newkey));
+            System.out.println(k + " key2=" +xoring.toAscii(newkey2));
+            //System.out.println("key1=" + xoring.toAscii(BinaryXor(Cryptogram[k], key)));
+            //System.out.println("key2=" + xoring.toAscii(BinaryXor(Cryptogram[k], key2)));
+        }
+        String goodkey[] = new String[200];
+        goodkey[2] = "11001000";
+        goodkey[3] = "00000000";  //mo¿e
+        goodkey[6] = "10101111";   //mo¿e
+        goodkey[7] = "10111101";   //mo¿e
+        goodkey[8] = "01011001";
+        goodkey[10] = "10111101";
+        goodkey[12] = "10101100";  //mo¿e
+        goodkey[15] = "01111001";  //mo¿e
+        goodkey[16] = "11101110";  //mo¿e
+        goodkey[17] = "01100010";
+        goodkey[18] = "10001011";  //mo¿e
+        goodkey[19] = "10100111";
+        goodkey[20] = "01000000";  //mo¿e
+        goodkey[21] = "11001111";
+        goodkey[23] = "01111011";
+        goodkey[26] = "10001110";  //mo¿e
+        goodkey[29] = "10110010";  //mo¿e
+        goodkey[30] = "01011011";
+        goodkey[31] = "00101111";
+        goodkey[32] = "11010011";
+        goodkey[34] = "11001110";
+        goodkey[35] = "10101110";
+        goodkey[36] = "01111000";
+        goodkey[37] = "11110000";
+        goodkey[38] = "01100100";
+        goodkey[39] = "10110000";
+        goodkey[41] = "11111010";
+        goodkey[43] = "00101010";
+        goodkey[45] = "01000100";
+        goodkey[47] = "00110100";
+        goodkey[49] = "10001011";
+        goodkey[50] = "01101101";
+        goodkey[52] = "10111101";
+        goodkey[53] = "11010001";
+        goodkey[54] = "10100100";
+        goodkey[55] = "10111101";
+        goodkey[56] = "01111100";
+        goodkey[59] = "00000001";
+        
+        String FullKey = "";
+        for(int ii = 0; ii < 64; ii++){
+        	if(goodkey[ii] == null)
+        		goodkey[ii] = "00000000";
+        	FullKey = FullKey + goodkey[ii];
+        }
+        System.out.println(FullKey);
+        System.out.println(xoring.Xoring(CipherToDecrypt, FullKey));
+    }
+    public static String BinaryXor(String s, String s1){
+        String key;
+        StringBuilder stb = new StringBuilder();
+        for(int l = 0; l < 8; l++)
+            stb.append(s.charAt(l + (12 * 8)) ^ s1.charAt(l));
+        key = stb.toString();
+        return key;
+    }
+}
